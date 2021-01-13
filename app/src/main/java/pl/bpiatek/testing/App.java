@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import java.io.File;
+import java.security.KeyStore;
 
 import pl.bpiatek.testing.model.Note;
 import pl.bpiatek.testing.services.AppStorage;
@@ -21,6 +22,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setUpKeyStoreKeys();
         appContext = getApplicationContext();
         File filesDir = getFilesDir();
 
@@ -45,5 +47,15 @@ public class App extends Application {
 
     public static PasswordService getPasswordService() {
         return passwordService;
+    }
+
+    public void setUpKeyStoreKeys() {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Note implements Serializable {
     private byte[] note;
     private byte[] password;
+    private byte[] passwordSignature;
 }

@@ -27,7 +27,6 @@ public class NoteService {
     }
 
     private AppStorage getAppStorage() {
-        App appContext = (App) App.getAppContext();
-        return appContext.getAppStorage();
+        return App.getAppStorage();
     }
 }

@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("MainActivity", "Sprawdzam czy hasło istnieje...");
         if (getPasswordService().passwordExist()) {
             Log.i("MainActivity", "HASLO ISTNIEJE");
             goToMainActivity();

@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import pl.bpiatek.testing.App;
 import pl.bpiatek.testing.R;
+import pl.bpiatek.testing.exceprions.InvalidPasswordException;
 
 public class CreatePasswordActivity extends AppCompatActivity {
 
@@ -25,9 +28,15 @@ public class CreatePasswordActivity extends AppCompatActivity {
         try {
             App.getPasswordService().setPassword(password);
             goToMainScreenActivity();
+        } catch (InvalidPasswordException e) {
+            Log.i("CreatePasswordActivity", e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            editText.setText("");
         } catch (Exception e) {
-            System.out.println("COS NIE TAK Z ZAPISYWANIEM HASLA");
+            Log.i("CreatePasswordActivity", "COS NIE TAK Z ZAPISYWANIEM HASLA");
             e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            editText.setText("");
         }
 
     }

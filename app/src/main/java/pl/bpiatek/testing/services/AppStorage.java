@@ -1,5 +1,7 @@
 package pl.bpiatek.testing.services;
 
+import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import pl.bpiatek.testing.exceprions.GeneralException;
 import pl.bpiatek.testing.model.Note;
 
 public class AppStorage {
@@ -36,8 +39,8 @@ public class AppStorage {
             out.close();
             bos.close();
         } catch (Exception e) {
-            System.out.println("COS NIE GRA PRZY ZAPISIE");
-            e.printStackTrace();
+            Log.e("AppStorage", "COS NIE GRA PRZY ZAPISIE");
+            throw new GeneralException(e.getMessage());
         }
     }
 
@@ -60,9 +63,8 @@ public class AppStorage {
         } catch (IOException | ClassNotFoundException e) {
             return new Note();
         } catch (Exception e) {
-            System.out.println("COS NIE GRA PRZY ODCZYCIE");
-            e.printStackTrace();
+            Log.e("AppStorage", "COS NIE GRA PRZY ODCZYCIE");
+            throw new GeneralException(e.getMessage());
         }
-        return new Note();
     }
 }

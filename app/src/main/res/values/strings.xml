@@ -12,4 +12,5 @@
     <string name="button_change_password">Zmień hasło</string>
     <string name="type_new_password_label">Podaj nowe hasło:</string>
     <string name="repeat_new_password_label">Powtórz nowe hasło:</string>
+    <string name="password_rules_label">Hasło musi mieć 6 - 15 znaków\nMinimalnie:\n- 1 znak specjalny\n- 1 wielka litere\n- 1 cyfrę</string>
 </resources>

@@ -19,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
-    public void login(View view) {
+    public void login(View view) throws Exception {
         EditText editText = findViewById(R.id.password_text);
         String password = editText.getText().toString();
 
