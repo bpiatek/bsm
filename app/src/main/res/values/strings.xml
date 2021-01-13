@@ -1,0 +1,15 @@
+<!--string values -->
+
+<resources>
+    <string name="app_name">BSM s439462</string>
+    <string name="button_show_note">Pokaż notatkę</string>
+    <string name="button_add_note">Dodaj / Edytuj notatkę</string>
+    <string name="button_save_note">Zapisz notatkę</string>
+    <string name="enter_password_label_text">Podaj swoje hasło:</string>
+    <string name="button_login">Zaloguj</string>
+    <string name="create_password_label_text">Podaj hasło:</string>
+    <string name="button_save_password">Zapisz</string>
+    <string name="button_change_password">Zmień hasło</string>
+    <string name="type_new_password_label">Podaj nowe hasło:</string>
+    <string name="repeat_new_password_label">Powtórz nowe hasło:</string>
+</resources>
