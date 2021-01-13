@@ -10,8 +10,9 @@ import org.passay.PasswordValidator;
 import org.passay.RuleResult;
 
 import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
-import pl.bpiatek.testing.App;
 import pl.bpiatek.testing.exceprions.GeneralException;
 import pl.bpiatek.testing.exceprions.InvalidPasswordException;
 
@@ -21,19 +22,23 @@ import static org.passay.EnglishCharacterData.Special;
 import static org.passay.EnglishCharacterData.UpperCase;
 import static org.passay.EnglishSequenceData.Alphabetical;
 import static org.passay.EnglishSequenceData.Numerical;
+import static pl.bpiatek.testing.App.KEYSTORE_PROVIDER_ANDROID_KEYSTORE;
+import static pl.bpiatek.testing.App.KEY_ALIAS;
 import static pl.bpiatek.testing.App.NOTE;
+import static pl.bpiatek.testing.App.getAppStorage;
 
 public class PasswordService {
 
     public void setPassword(String password) {
-        if(!isValid(password)) {
+        if (!isValid(password)) {
             throw new InvalidPasswordException("Niewystarczające hasło. Spróbuj jeszcze raz!");
         }
 
         try {
-            String encryptedPassword = PasswordAESCrypt.encrypt(password);
-            System.out.println("******* ENCRYPTED PASSWORD: " + encryptedPassword + "************");
+            PublicKey publicKey = getKeystorePublicKey();
+            String encryptedPassword = PasswordCrypt.encrypt(publicKey, password.getBytes());
             NOTE.setPassword(encryptedPassword.getBytes());
+            getAppStorage().save(NOTE);
         } catch (Exception e) {
             Log.e("PasswordService", "Problem z password encryptor");
             e.printStackTrace();
@@ -42,10 +47,9 @@ public class PasswordService {
 
     public String getPassword() {
         try {
-            String password = new String(NOTE.getPassword());
-            String decrypt = PasswordAESCrypt.decrypt(password);
-            System.out.println("******* DECRYPTED PASSWORD: " + decrypt + "************");
-            return decrypt;
+            byte[] password = NOTE.getPassword();
+            PrivateKey privateKey = getKeystorePrivateKey();
+            return PasswordCrypt.decrypt(privateKey, password);
         } catch (Exception e) {
             Log.e("PasswordService", "Problem z password decryptor");
             throw new GeneralException(e.getMessage());
@@ -53,13 +57,17 @@ public class PasswordService {
     }
 
     public boolean passwordExist() {
-        return App.getAppStorage().load().getPassword() != null;
+        try {
+            return getAppStorage().load().getPassword() != null;
+        } catch (Exception e) {
+            throw new GeneralException("Problem przy sprawdzaniu hasła");
+        }
     }
 
     public boolean isCorrectPassword(String password) throws Exception {
         Log.i("PasswordService", "Sprawdzam czy dane hasło jest zachwane...");
-        String actualPassword = new String(App.getAppStorage().load().getPassword());
-        String decryptedActualPassword = PasswordAESCrypt.decrypt(actualPassword);
+        byte[] actualPassword = getAppStorage().load().getPassword();
+        String decryptedActualPassword = PasswordCrypt.decrypt(getKeystorePrivateKey(), actualPassword);
 
         return decryptedActualPassword.equals(password);
     }
@@ -77,5 +85,19 @@ public class PasswordService {
         RuleResult result = passwordValidator.validate(new PasswordData(password));
 
         return result.isValid();
+    }
+
+    private PublicKey getKeystorePublicKey() throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        keyStore.load(null);
+
+        return keyStore.getCertificate(KEY_ALIAS).getPublicKey();
+    }
+
+    private PrivateKey getKeystorePrivateKey() throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
+        keyStore.load(null);
+
+        return (PrivateKey) keyStore.getKey(KEY_ALIAS, null);
     }
 }
